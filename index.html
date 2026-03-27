@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wanderly — Travel Recommendations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <a href="#home" class="nav-logo" onclick="showSection('home')">
+      <span class="logo-icon">✦</span> Wanderly
+    </a>
+    <div class="nav-links">
+      <a href="#home" class="nav-link active" onclick="showSection('home')" data-section="home">Home</a>
+      <a href="#about" class="nav-link" onclick="showSection('about')" data-section="about">About Us</a>
+      <a href="#contact" class="nav-link" onclick="showSection('contact')" data-section="contact">Contact Us</a>
+    </div>
+    <div class="nav-search">
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search beaches, temples, countries…" />
+        <button class="btn-search" onclick="handleSearch()">Search</button>
+        <button class="btn-clear" onclick="clearSearch()">Clear</button>
+      </div>
+    </div>
+    <button class="nav-toggle" id="navToggle" onclick="toggleNav()">☰</button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home" onclick="showSection('home'); closeMobileMenu()">Home</a>
+    <a href="#about" onclick="showSection('about'); closeMobileMenu()">About Us</a>
+    <a href="#contact" onclick="showSection('contact'); closeMobileMenu()">Contact Us</a>
+    <div class="mobile-search">
+      <input type="text" id="mobileSearchInput" class="search-input" placeholder="Search destinations…" />
+      <button class="btn-search" onclick="handleSearch(true)">Search</button>
+      <button class="btn-clear" onclick="clearSearch()">Clear</button>
+    </div>
+  </div>
+
+  <!-- HOME SECTION -->
+  <section id="home" class="section active">
+    <div class="hero">
+      <div class="hero-bg">
+        <div class="hero-overlay"></div>
+        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1600&q=90" alt="Hero" class="hero-img" />
+      </div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">Discover the World</p>
+        <h1 class="hero-title">Where Will Your<br/><em>Story</em> Begin?</h1>
+        <p class="hero-subtitle">Curated travel recommendations for every type of explorer — beaches, temples, cities, and beyond.</p>
+        <div class="hero-cta">
+          <button class="btn-primary" onclick="document.getElementById('searchInput').focus()">Explore Destinations</button>
+          <button class="btn-ghost" onclick="showSection('about')">Our Story</button>
+        </div>
+      </div>
+      <div class="hero-scroll">
+        <span>Scroll to explore</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+
+    <!-- FEATURED CATEGORIES -->
+    <div class="container section-pad">
+      <div class="section-header">
+        <p class="eyebrow">Explore by Category</p>
+        <h2 class="section-title">Find Your Perfect Escape</h2>
+        <p class="section-desc">From sun-drenched shores to sacred temples and vibrant cities — your ideal destination awaits.</p>
+      </div>
+      <div class="category-grid">
+        <div class="category-card" onclick="quickSearch('beach')">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Beaches" />
+          <div class="category-overlay">
+            <span class="category-icon"><i class="fa-solid fa-umbrella-beach"></i></i></span>
+            <h3>Beaches</h3>
+            <p>Sun, sand & crystal waters</p>
+          </div>
+        </div>
+        <div class="category-card" onclick="quickSearch('temple')">
+          <img src="https://images.unsplash.com/photo-1513415564515-763d91423bdd?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Temples" />
+          <div class="category-overlay">
+            <span class="category-icon"><i class="fa-solid fa-landmark"></i></span>
+            <h3>Temples</h3>
+            <p>Ancient wonders & spirituality</p>
+          </div>
+        </div>
+        <div class="category-card" onclick="quickSearch('country')">
+          <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80" alt="Countries" />
+          <div class="category-overlay">
+            <span class="category-icon"><i class="fa-solid fa-earth"></i>  </span>
+            <h3>Countries</h3>
+            <p>Cities, culture & cuisine</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS SECTION -->
+    <div id="resultsSection" class="container results-container" style="display:none;">
+      <div class="results-header">
+        <div>
+          <p class="eyebrow" id="resultsEyebrow">Search Results</p>
+          <h2 class="section-title" id="resultsTitle">Recommendations for You</h2>
+        </div>
+        <button class="btn-outline" onclick="clearSearch()">✕ Clear Results</button>
+      </div>
+      <div id="resultsGrid" class="results-grid"></div>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip">
+      <div class="stat-item">
+        <span class="stat-number">200+</span>
+        <span class="stat-label">Destinations</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number">50K+</span>
+        <span class="stat-label">Happy Travelers</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number">98%</span>
+        <span class="stat-label">Satisfaction Rate</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number">5+</span>
+        <span class="stat-label">Years of Experience</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about" class="section">
+    <div class="page-hero page-hero--about">
+      <div class="page-hero-overlay"></div>
+      <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80" alt="About" class="page-hero-img"/>
+      <div class="page-hero-content">
+        <p class="hero-eyebrow">Our Story</p>
+        <h1 class="hero-title">Passionate About<br/><em>Every Journey</em></h1>
+      </div>
+    </div>
+
+    <div class="container section-pad">
+      <!-- Mission -->
+      <div class="about-intro">
+        <div class="about-intro-text">
+          <p class="eyebrow">Our Mission</p>
+          <h2 class="section-title">We Believe Travel<br/>Changes Everything</h2>
+          <p class="body-text">Founded in 2021, Wanderly was born from a simple belief: that the right travel recommendation can transform a trip from ordinary to unforgettable. We are a team of seasoned explorers, cultural enthusiasts, and digital innovators dedicated to helping you discover the world's most extraordinary destinations.</p>
+          <p class="body-text">Our platform combines deep local knowledge with intelligent technology to match every traveler with their perfect destination — whether it's a hidden beach, a sacred temple, or a bustling metropolis.</p>
+        </div>
+        <div class="about-intro-image">
+          <img src="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=600&q=80" alt="Our mission" />
+        </div>
+      </div>
+
+      <!-- Values -->
+      <div class="values-section">
+        <div class="section-header">
+          <p class="eyebrow">What Drives Us</p>
+          <h2 class="section-title">Our Core Values</h2>
+        </div>
+        <div class="values-grid">
+          <div class="value-card">
+            <div class="value-icon"><i class="fa-solid fa-check-circle"></i></div>
+            <h3>Authenticity</h3>
+            <p>Every recommendation is honest, research-backed, and based on real traveler experiences — never sponsored or biased.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fa-solid fa-leaf"></i></div>
+            <h3>Sustainability</h3>
+            <p>We champion responsible travel, promoting destinations and operators committed to environmental and cultural preservation.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fa-solid fa-people-group"></i></div>
+            <h3>Community</h3>
+            <p>Our global community of travelers share stories, tips, and discoveries that make every journey richer and more connected.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fa-solid fa-trophy"></i></div>
+            <h3>Excellence</h3>
+            <p>We obsess over every detail — from curating the best destinations to ensuring a seamless, beautiful user experience.</p>
+          </div>
+        </div>
+      </div>
+
+     <!-- Team -->
+<div class="team-section">
+  <div class="section-header">
+    <p class="eyebrow">The People Behind Wanderly</p>
+    <h2 class="section-title">Meet Our Team</h2>
+  </div>
+
+  <div class="team-grid">
+
+    <div class="team-card">
+      <div class="team-photo">
+        <img src="https://images.unsplash.com/photo-1543716778-1b10caf74fb8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Jack" />
+      </div>
+      <div class="team-info">
+        <h3>Jack Sparrow</h3>
+        <span class="team-role">Founder & CEO</span>
+        <p>A passionate traveler and tech enthusiast, Jacky founded Wanderly in 2021 to simplify travel discovery using smart and personalized recommendations.</p>
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-photo">
+        <img src="https://images.unsplash.com/photo-1563904979125-009ed5eb70f4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Emily" />
+      </div>
+      <div class="team-info">
+        <h3>Emily Cooper</h3>
+        <span class="team-role">Head of Experience</span>
+        <p>Emily curates unique travel experiences, focusing on authentic destinations and meaningful journeys that go beyond typical tourist spots.</p>
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-photo">
+        <img src="https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ankit" />
+        
+      </div>
+      <div class="team-info">
+        <h3>Ankit Prabhavak</h3>
+        <span class="team-role">Lead Developer</span>
+        <p>A full-stack developer, Ankit built Wanderly’s recommendation engine, making it easier for users to discover destinations tailored to their interests.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Timeline -->
+<div class="timeline-section">
+  <div class="section-header">
+    <p class="eyebrow">Our Journey</p>
+    <h2 class="section-title">Company Milestones</h2>
+  </div>
+
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-year">2021</div>
+      <div class="timeline-content">
+        <h3>Founded</h3>
+        <p>Wanderly was founded with a vision to make travel planning simple, personalized, and accessible for everyone.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-year">2022</div>
+      <div class="timeline-content">
+        <h3>Platform Launch</h3>
+        <p>Successfully launched the Wanderly platform, helping users explore destinations based on preferences like budget, nature, and culture.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-year">2023</div>
+      <div class="timeline-content">
+        <h3>Smart Recommendations</h3>
+        <p>Introduced an intelligent recommendation system to provide tailored travel suggestions and improve user experience.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-year">2025</div>
+      <div class="timeline-content">
+        <h3>Growing Community</h3>
+        <p>Reached thousands of active users and expanded destination listings across multiple countries and travel categories.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="section">
+    <div class="page-hero page-hero--contact">
+      <div class="page-hero-overlay"></div>
+      <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600&q=80" alt="Contact" class="page-hero-img"/>
+      <div class="page-hero-content">
+        <p class="hero-eyebrow">Get in Touch</p>
+        <h1 class="hero-title">We'd Love to<br/><em>Hear From You</em></h1>
+      </div>
+    </div>
+
+    <div class="container section-pad">
+      <div class="contact-layout">
+        <!-- Info -->
+        <div class="contact-info">
+          <p class="eyebrow">Contact Information</p>
+          <h2 class="section-title">Reach Our Team</h2>
+          <p class="body-text">Have a question about a destination? Want to suggest a hidden gem? Or simply want to say hello? Our team is here to help — reach out anytime.</p>
+
+          <div class="contact-details">
+            <div class="contact-detail-item">
+              <div class="contact-icon"><i class="fa-solid fa-city"></i></div>
+              <div>
+                <strong>Headquarters</strong>
+                <p>15 Rue de Rivoli, 75004 Paris, France</p>
+              </div>
+            </div>
+            <div class="contact-detail-item">
+              <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+              <div>
+                <strong>Email Us</strong>
+                <p><a href="mailto:hello@wanderly.com">hello@wanderly.com</a></p>
+              </div>
+            </div>
+            <div class="contact-detail-item">
+              <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+              <div>
+                <strong>Call Us</strong>
+                <p>+1 (415) 555-0192</p>
+              </div>
+            </div>
+            <div class="contact-detail-item">
+              <div class="contact-icon"><i class="fa-solid fa-clock"></i></div>
+              <div>
+                <strong>Office Hours</strong>
+                <p>Monday – Friday, 9am – 6pm PST</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="social-links">
+            <a href="#" class="social-link">Instagram</a>
+            <a href="#" class="social-link">Twitter / X</a>
+            <a href="#" class="social-link">Facebook</a>
+            <a href="#" class="social-link">YouTube</a>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="contact-form-wrapper">
+          <div class="contact-form-card">
+            <h3>Send Us a Message</h3>
+            <p>We typically respond within 24 hours.</p>
+            <div id="formSuccess" class="form-success" style="display:none;">
+              <span class="success-icon">✓</span>
+              <div>
+                <strong>Message Sent!</strong>
+                <p>Thank you for reaching out. We'll get back to you shortly.</p>
+              </div>
+            </div>
+            <div id="contactForm">
+              <div class="form-group">
+                <label for="fname">Full Name</label>
+                <input type="text" id="fname" placeholder="e.g. Gabriel Macron" />
+                <span class="field-error" id="fnameError"></span>
+              </div>
+              <div class="form-group">
+                <label for="femail">Email Address</label>
+                <input type="email" id="femail" placeholder="e.g. gabriel@email.com" />
+                <span class="field-error" id="femailError"></span>
+              </div>
+              <div class="form-group">
+                <label for="fsubject">Subject</label>
+                <input type="text" id="fsubject" placeholder="What's this about?" />
+              </div>
+              <div class="form-group">
+                <label for="fmessage">Message</label>
+                <textarea id="fmessage" rows="5" placeholder="Tell us how we can help you…"></textarea>
+                <span class="field-error" id="fmessageError"></span>
+              </div>
+              <button class="btn-primary btn-full" onclick="submitForm()">Send Message →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">✦</span> Wanderly
+        <p>Inspiring journeys, one recommendation at a time.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#home" onclick="showSection('home')">Home</a>
+        <a href="#about" onclick="showSection('about')">About Us</a>
+        <a href="#contact" onclick="showSection('contact')">Contact</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 Wanderly Travel. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
